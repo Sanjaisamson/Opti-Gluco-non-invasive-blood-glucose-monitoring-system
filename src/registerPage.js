@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
-import auth from '@react-native-firebase/auth'; 
-
+import { View, TextInput, StyleSheet } from 'react-native';
+import {auth} from './firebase';
+import { Text, Button } from 'react-native-paper';
+import {createUserWithEmailAndPassword } from "firebase/auth";
 const RegisterScreen = () => {
-    const [productId, setProductId] = useState('');
+    // const [productId, setProductId] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [registrationStatus , setRegistrationStatus] = useState('');
@@ -11,7 +12,7 @@ const RegisterScreen = () => {
     const handleRegister = async () => {
       try {
         
-        const userCredential = await auth().createUserWithEmailAndPassword(email, password);
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         console.log('User registered successfully:', userCredential.user.email);
         setRegistrationStatus('Success');
 
@@ -23,13 +24,15 @@ const RegisterScreen = () => {
   
     return (
       <View style={styles.container}>
-        <Text style={styles.title}>Register</Text>
-        <TextInput
+        <View>
+      <Text style={styles.title} >Create new Account</Text>
+      </View>
+        {/* <TextInput
           style={styles.input}
           placeholder="Product ID"
           onChangeText={setProductId}
           value={productId}
-        />
+        /> */}
         <TextInput
           style={styles.input}
           placeholder="Email"
@@ -44,9 +47,11 @@ const RegisterScreen = () => {
           value={password}
           secureTextEntry
         />
-        <Button title="Register" onPress={handleRegister} />
+        <View style = {styles.button}>
+        <Button icon="login" mode="elevated" title="Register" onPress={handleRegister}>Register</Button>
         {registrationStatus === 'Success' && <Text style={styles.successMessage}>Registration Successful!</Text>}
         {registrationStatus === 'Error' && <Text style={styles.errorMessage}>Registration Failed. Please try again.</Text>}
+        </View>
       </View>
     );
   };
@@ -61,7 +66,7 @@ const RegisterScreen = () => {
     title: {
       fontSize: 24,
       fontWeight: 'bold',
-      marginBottom: 20,
+      marginBottom: 50,
     },
     input: {
       width: '80%',
@@ -79,6 +84,9 @@ const RegisterScreen = () => {
         color: 'red',
         marginTop: 10,
       },
+      button: {
+        padding:'30'
+      }
   });
   
   export default RegisterScreen;
